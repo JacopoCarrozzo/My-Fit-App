@@ -20,7 +20,7 @@ export const calculateLoseWeightLogic = (stats: UserStats, tdee: number): UserPr
     ...stats,
     dailyCalories: calories,
     macros: {
-      protein: proteinGrams,
+      proteins: proteinGrams,
       carbs: carbGrams,
       fats: fatGrams,
     },

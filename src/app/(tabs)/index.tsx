@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { useUserProfile } from '@/src/context/UserContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { DismissKeyboardView } from '@/src/components/ui/DismissKeyboardView';
 import { StepTitle } from '@/src/components/onboarding/ui/Title';
 import { Strings } from '@/src/constants/Strings';
@@ -8,24 +8,27 @@ import { useAppSelector } from '@/src/hooks/reduxHooks';
 
 export default function TabOneScreen() {
   const name = useAppSelector((state) => state.user.stats?.name);
-  const { profile } = useUserProfile();
-  if (!profile) {
-    return (
-      <View>
-        <Text>Loading data...</Text>
-      </View>
-    );
-  }
+  console.log('name: ', name);
 
   return (
-    <DismissKeyboardView>
-      <StepTitle style={styles.welcomeText}>{Strings.tabs.welcomeText + ' ' + name + '!'}</StepTitle>
-      <CaloriesCard />
-    </DismissKeyboardView>
+    <SafeAreaView style={styles.safeArea}>
+      <DismissKeyboardView>
+        <View style={styles.container}>
+          <StepTitle style={styles.welcomeText}>{Strings.tabs.welcomeText + ' ' + name + '!'}</StepTitle>
+          <CaloriesCard />
+        </View>
+      </DismissKeyboardView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
   welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',

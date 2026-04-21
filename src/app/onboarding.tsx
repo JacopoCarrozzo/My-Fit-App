@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UserStats } from '@/src/types/user';
-import { useUserProfile } from '@/src/context/UserContext';
 import Step0_Welcome from '@/src/components/onboarding/steps/Step0_Welcome';
 import Step1_GoalSelection from '@/src/components/onboarding/steps/Step1_GoalSelection';
 import Step2_GenderSelection from '@/src/components/onboarding/steps/Step2_GenderSelection';
@@ -13,14 +12,13 @@ import Step6_AgeInput from '@/src/components/onboarding/steps/Step6_AgeInput';
 import Step7_ActivitySelection from '@/src/components/onboarding/steps/Step7_ActivitySelection';
 import { finalizeNutritionProfile } from '@/src/utils/nutrition/index';
 import Colors from '@/src/constants/Colors';
-import { ProgressBar } from '../components/onboarding/ui/ProgressBar';
+import { ProgressBar } from '@/src/components/ui/ProgressBar';
 import { useAppDispatch } from '@/src/hooks/reduxHooks';
 import { setUserProfile } from '@/src/features/user/userSlice';
 
 export default function OnboardingScreen() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<Partial<UserStats>>({});
-  const { setProfile } = useUserProfile();
   const TOTAL_STEPS = 7;
 
   const dispatch = useAppDispatch();
@@ -38,8 +36,6 @@ export default function OnboardingScreen() {
           profile: finalProfile,
         }),
       );
-
-      await setProfile(finalProfile); // Context — per ora lo teniamo per la navigazione
     } else {
       setStep((s) => s + 1);
     }

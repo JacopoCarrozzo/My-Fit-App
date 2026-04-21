@@ -20,7 +20,7 @@ export const calculateHealthyEatingLogic = (stats: UserStats, tdee: number): Use
     ...stats,
     dailyCalories: calories,
     macros: {
-      protein: proteinGrams,
+      proteins: proteinGrams,
       carbs: carbGrams,
       fats: fatGrams,
     },

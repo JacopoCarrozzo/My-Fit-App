@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useUserProfile } from '@/src/context/UserContext';
 import { askAiCoach } from '@/src/services/aiService';
 
 export interface Message {
@@ -10,7 +9,6 @@ export interface Message {
 }
 
 export const useAiCoach = () => {
-  const { profile } = useUserProfile();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -29,7 +27,7 @@ export const useAiCoach = () => {
     setIsTyping(true);
 
     try {
-      const aiResponse = await askAiCoach(text, profile);
+      const aiResponse = await askAiCoach(text, null);
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),

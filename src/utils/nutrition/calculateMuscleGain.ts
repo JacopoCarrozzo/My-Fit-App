@@ -19,6 +19,6 @@ export const calculateMuscleGainLogic = (stats: UserStats, tdee: number): UserPr
   return {
     ...stats,
     dailyCalories: calories,
-    macros: { protein: proteinGrams, carbs: carbGrams, fats: fatGrams },
+    macros: { proteins: proteinGrams, carbs: carbGrams, fats: fatGrams },
   };
 };

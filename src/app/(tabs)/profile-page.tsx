@@ -4,10 +4,8 @@ import { clearUser, updateName } from '@/src/features/user/userSlice';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useUserProfile } from '@/src/context/UserContext';
 
 export default function ProfilePage() {
-  const { setProfile } = useUserProfile();
   const dispatch = useAppDispatch();
   const name = useAppSelector((state) => state.user.stats?.name);
 
@@ -22,7 +20,7 @@ export default function ProfilePage() {
   const handleReset = async () => {
     dispatch(clearUser());
     await AsyncStorage.removeItem('@user_profile');
-    setProfile(null);
+    null;
   };
 
   return (

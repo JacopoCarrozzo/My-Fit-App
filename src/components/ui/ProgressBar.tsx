@@ -3,12 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import Colors from '@/src/constants/Colors';
 
 interface Props {
-  currentStep: number;
-  totalSteps: number;
+  current: number;
+  total: number;
 }
 
-export const ProgressBar = ({ currentStep, totalSteps }: Props) => {
-  const progress = Math.min(Math.max((currentStep / totalSteps) * 100, 0), 100);
+export const ProgressBar = ({ current, total }: Props) => {
+  const progress = Math.min(Math.max((current / total) * 100, 0), 100);
 
   return (
     <View style={styles.progressBarBackground}>
