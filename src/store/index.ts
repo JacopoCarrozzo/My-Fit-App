@@ -3,11 +3,14 @@ import userReducer from '@/src/features/user/userSlice'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import nutritionReducer from '@/src/features/nutrition/nutritionSlice'
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, persistStore } from 'redux-persist'
+import { apiSlice } from '@/src/api/apiSlice'
 
 const rootReducer = combineReducers({
   user: userReducer,
   nutrition: nutritionReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
 })
+
 
 const persistConfig = {
   key: 'root',
@@ -25,7 +28,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(apiSlice.middleware),
     devTools: process.env.NODE_ENV !== 'production',
   })
 

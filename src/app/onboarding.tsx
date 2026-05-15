@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UserStats } from '@/src/types/user';
+import { RegisterCredentials } from '@/src/types/auth';
 import Step0_Welcome from '@/src/components/onboarding/steps/Step0_Welcome';
 import Step1_GoalSelection from '@/src/components/onboarding/steps/Step1_GoalSelection';
 import Step2_GenderSelection from '@/src/components/onboarding/steps/Step2_GenderSelection';
@@ -10,32 +11,47 @@ import Step4_HeightInput from '@/src/components/onboarding/steps/Step4_HeightInp
 import Step5_WeightInput from '@/src/components/onboarding/steps/Step5_WeightInput';
 import Step6_AgeInput from '@/src/components/onboarding/steps/Step6_AgeInput';
 import Step7_ActivitySelection from '@/src/components/onboarding/steps/Step7_ActivitySelection';
+import Step8_EmailPassword from '@/src/components/onboarding/steps/Step8_EmailPassword';
 import { finalizeNutritionProfile } from '@/src/utils/nutrition/index';
 import Colors from '@/src/constants/Colors';
 import { ProgressBar } from '@/src/components/ui/ProgressBar';
 import { useAppDispatch } from '@/src/hooks/reduxHooks';
 import { setUserProfile } from '@/src/features/user/userSlice';
+import { useRegisterMutation } from '@/src/api/authApi';
 
 export default function OnboardingScreen() {
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState<Partial<UserStats>>({});
-  const TOTAL_STEPS = 7;
+  const [formData, setFormData] = useState<Partial<UserStats & RegisterCredentials>>({});
+  const TOTAL_STEPS = 8;
 
+  const [registerUser] = useRegisterMutation();
   const dispatch = useAppDispatch();
 
-  const handleNext = async (newData?: Partial<UserStats>) => {
+  const handleNext = async (newData?: Partial<UserStats & RegisterCredentials>) => {
     const updatedData = { ...formData, ...newData };
     setFormData(updatedData);
 
     if (step === TOTAL_STEPS) {
       const finalProfile = finalizeNutritionProfile(updatedData as UserStats);
 
-      dispatch(
-        setUserProfile({
-          stats: updatedData as UserStats,
-          profile: finalProfile,
-        }),
-      );
+      try {
+        const result = await registerUser({
+          name: updatedData.name!,
+          email: updatedData.email!,
+          password: updatedData.password!,
+        }).unwrap();
+
+        dispatch(
+          setUserProfile({
+            stats: updatedData as UserStats,
+            profile: finalProfile,
+          }),
+        );
+
+        console.log('Utente registrato:', result);
+      } catch (error) {
+        console.error('Errore registrazione:', error);
+      }
     } else {
       setStep((s) => s + 1);
     }
@@ -52,7 +68,7 @@ export default function OnboardingScreen() {
 
     switch (step) {
       case 0:
-        return <Step0_Welcome {...props} />; //... fast way to pass the props
+        return <Step0_Welcome {...props} />;
       case 1:
         return <Step1_GoalSelection {...props} />;
       case 2:
@@ -67,6 +83,8 @@ export default function OnboardingScreen() {
         return <Step6_AgeInput {...props} />;
       case 7:
         return <Step7_ActivitySelection {...props} />;
+      case 8:
+        return <Step8_EmailPassword {...props} />;
       default:
         return <Step0_Welcome {...props} />;
     }
@@ -74,7 +92,7 @@ export default function OnboardingScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      {step > 0 && <ProgressBar currentStep={step} totalSteps={TOTAL_STEPS} />}
+      {step > 0 && <ProgressBar current={step} total={TOTAL_STEPS} />}
       <View style={styles.content}>{renderStep()}</View>
     </SafeAreaView>
   );

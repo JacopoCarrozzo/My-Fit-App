@@ -8,9 +8,19 @@ interface Props {
   placeholder: string;
   keyboardType?: KeyboardTypeOptions;
   unit?: string;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  secureTextEntry?: boolean;
 }
 
-export const Input = ({ value, onChangeText, placeholder, keyboardType = 'default', unit }: Props) => {
+export const Input = ({
+  value,
+  onChangeText,
+  placeholder,
+  keyboardType = 'default',
+  unit,
+  autoCapitalize = 'sentences',
+  secureTextEntry = false,
+}: Props) => {
   const isNumeric = unit ? true : false;
 
   return (
@@ -24,6 +34,8 @@ export const Input = ({ value, onChangeText, placeholder, keyboardType = 'defaul
           placeholderTextColor={Colors.light.blue}
           keyboardType={keyboardType}
           selectionColor={Colors.light.blue}
+          autoCapitalize={autoCapitalize}
+          secureTextEntry={secureTextEntry}
         />
         {unit && value.length > 0 && <Text style={styles.unitText}>{' ' + unit}</Text>}
       </View>
